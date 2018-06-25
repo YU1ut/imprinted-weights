@@ -41,7 +41,7 @@ class Extractor(nn.Module):
         self.extractor = nn.Sequential(*list(basenet.children())[:-1])
 
     def forward(self, x):
-        x = self.resnet(x)
+        x = self.extractor(x)
         x = x.view(x.size(0), -1)
         return x
 
