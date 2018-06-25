@@ -29,6 +29,11 @@ class Net(nn.Module):
 
         return output
 
+    def weight_norm(self):
+        w = self.classifier.fc.weight.data
+        norm = w.norm(p=2, dim=1, keepdim=True)
+        self.classifier.fc.weight.data = w.div(norm.expand_as(w))
+
 class Extractor(nn.Module):
     def __init__(self):
         super(Extractor,self).__init__()
