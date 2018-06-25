@@ -12,7 +12,7 @@ class ImageLoader(torch.utils.data.Dataset):
 
     def __init__(self, root, transform=None, target_transform=None, train=False, num_classes=100,
                  loader=pil_loader):
-        img_folder = os.path.join(root, "image")
+        img_folder = os.path.join(root, "images")
         img_paths = pd.read_csv(os.path.join(root, "images.txt"), sep=" ", header=None, names=['idx', 'path'])
         img_labels = pd.read_csv(os.path.join(root, "image_class_labels.txt"), sep=" ", header=None,  names=['idx', 'label'])
         train_test_split = pd.read_csv(os.path.join(root, "train_test_split.txt"), sep=" ", header=None,  names=['idx', 'train_flag'])
