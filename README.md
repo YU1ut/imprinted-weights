@@ -6,3 +6,4 @@ This is an unofficial pytorch implementation of [Low-Shot Learning with Imprinte
 - Python 3.5+
 - PyTorch 0.4
 - torchvision
+- progress
