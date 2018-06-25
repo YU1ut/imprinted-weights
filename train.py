@@ -52,7 +52,7 @@ def main():
     classifier_params = filter(lambda p: id(p) not in extractor_params, model.parameters())
 
     optimizer = torch.optim.RMSprop([
-                {'params': extractor_params},
+                {'params': model.extractor.parameters()},
                 {'params': classifier_params, 'lr': args.lr * 10}
             ], lr=args.lr, momentum=args.momentum)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=4, gamma=0.94)
