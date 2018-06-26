@@ -31,6 +31,8 @@ parser.add_argument('--lr', '--learning-rate', default=1e-4, type=float,
                     metavar='LR', help='initial learning rate')
 parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
                     help='momentum')
+parser.add_argument('--weight-decay', '--wd', default=1e-4, type=float,
+                    metavar='W', help='weight decay (default: 1e-4)') 
 parser.add_argument('--print-freq', '-p', default=10, type=int,
                     metavar='N', help='print frequency (default: 10)')
 parser.add_argument('-c', '--checkpoint', default='checkpoint', type=str, metavar='PATH',
@@ -58,11 +60,11 @@ def main():
     extractor_params = list(map(id, model.extractor.parameters()))
     classifier_params = filter(lambda p: id(p) not in extractor_params, model.parameters())
 
-    optimizer = torch.optim.RMSprop([
+    optimizer = torch.optim.SGD([
                 {'params': model.extractor.parameters()},
                 {'params': classifier_params, 'lr': args.lr * 10}
-            ], lr=args.lr, momentum=args.momentum)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=4, gamma=0.94)
+            ], lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
     # optionally resume from a checkpoint
     title = 'CUB'
     if args.resume:
