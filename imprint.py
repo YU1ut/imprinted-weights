@@ -95,40 +95,41 @@ def imprint(train_loader, model):
     model.eval()
     end = time.time()
     bar = Bar('Processing', max=len(train_loader))
-    for batch_idx, (input, target) in enumerate(train_loader):
-        # measure data loading time
-        data_time.update(time.time() - end)
+    with torch.no_grad():
+        for batch_idx, (input, target) in enumerate(train_loader):
+            # measure data loading time
+            data_time.update(time.time() - end)
 
-        input = input.cuda()
+            input = input.cuda()
 
-        # compute output
-        output = model.extractor(input).cpu().detach()
+            # compute output
+            output = model.extractor(input).cpu()
 
-        if batch_idx == 0:
-            output_stack = output
-            target_stack = target
-        else:
-            output_stack = torch.cat((output_stack, output), 0)
-            target_stack = torch.cat((target_stack, target), 0)
-        # measure elapsed time
-        batch_time.update(time.time() - end)
-        end = time.time()
+            if batch_idx == 0:
+                output_stack = output
+                target_stack = target
+            else:
+                output_stack = torch.cat((output_stack, output), 0)
+                target_stack = torch.cat((target_stack, target), 0)
+            # measure elapsed time
+            batch_time.update(time.time() - end)
+            end = time.time()
 
-        # plot progress
-        bar.suffix  = '({batch}/{size}) Data: {data:.3f}s | Batch: {bt:.3f}s | Total: {total:} | ETA: {eta:}'.format(
-                    batch=batch_idx + 1,
-                    size=len(train_loader),
-                    data=data_time.val,
-                    bt=batch_time.val,
-                    total=bar.elapsed_td,
-                    eta=bar.eta_td
-                    )
-        bar.next()
-    bar.finish()
+            # plot progress
+            bar.suffix  = '({batch}/{size}) Data: {data:.3f}s | Batch: {bt:.3f}s | Total: {total:} | ETA: {eta:}'.format(
+                        batch=batch_idx + 1,
+                        size=len(train_loader),
+                        data=data_time.val,
+                        bt=batch_time.val,
+                        total=bar.elapsed_td,
+                        eta=bar.eta_td
+                        )
+            bar.next()
+        bar.finish()
 
     new_weight = torch.zeros(100, 2048)
     for i in range(len(target_stack)):
-        tmp = output_stack[target_stack == (i + 100)].mean(0) if args.method == 'imprint' else torch.randn(2048)
+        tmp = output_stack[target_stack == (i + 100)].mean(0) if args.method == 'imprint' else torch.randn(1, 2048)
         new_weight[i] = tmp / tmp.norm(p=2)
     weight = torch.cat((model.classifier.fc.weight.data, new_weight.cuda()))
     model.classifier.fc = nn.Linear(2048, 200, bias=False)
