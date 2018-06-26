@@ -10,7 +10,7 @@ def pil_loader(path):
 
 class ImageLoader(torch.utils.data.Dataset):
 
-    def __init__(self, root, transform=None, target_transform=None, train=False, num_classes=100,
+    def __init__(self, root, transform=None, target_transform=None, train=False, num_classes=100, num_train_sample=0, novel_only=False,
                  loader=pil_loader):
         img_folder = os.path.join(root, "images")
         img_paths = pd.read_csv(os.path.join(root, "images.txt"), sep=" ", header=None, names=['idx', 'path'])
@@ -18,13 +18,19 @@ class ImageLoader(torch.utils.data.Dataset):
         train_test_split = pd.read_csv(os.path.join(root, "train_test_split.txt"), sep=" ", header=None,  names=['idx', 'train_flag'])
         data = pd.concat([img_paths, img_labels, train_test_split], axis=1)
         data['label'] = data['label'] - 1
-
         data = data[data['label'] < num_classes]
-        if train == True:
-            imgs = data[data['train_flag'] == 1].reset_index(drop=True)
-        else:
-            imgs = data[data['train_flag'] == 0].reset_index(drop=True)
+        base_data = data[data['label'] < 100]
+        novel_data = data[data['label'] >= 100]
+        
 
+        if num_train_sample != 0:
+            novel_data = novel_data.groupby('label', group_keys=False).apply(lambda x: x.iloc[:num_train_sample])
+        if novel_only:
+            data = novel_data
+        else:
+            data = pd.concat([base_data, novel_data])
+        imgs = data[data['train_flag'] == train].reset_index(drop=True)
+        
         if len(imgs) == 0:
             raise(RuntimeError("no csv file"))
         self.root = img_folder
