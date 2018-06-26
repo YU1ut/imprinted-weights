@@ -103,7 +103,8 @@ def imprint(train_loader, model):
             input = input.cuda()
 
             # compute output
-            output = model.extractor(input).cpu()
+            output = model.extractor(input)
+            output = model.l2_norm(output).cpu()
 
             if batch_idx == 0:
                 output_stack = output
