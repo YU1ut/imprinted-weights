@@ -89,11 +89,15 @@ def main():
 
 
 def imprint(train_loader, model):
-
+    batch_time = AverageMeter()
+    data_time = AverageMeter()
     # switch to evaluate mode
     model.eval()
-
+    end = time.time()
+    bar = Bar('Processing', max=len(train_loader))
     for batch_idx, (input, target) in enumerate(train_loader):
+        # measure data loading time
+        data_time.update(time.time() - end)
 
         input = input.cuda()
         target = target.cuda(non_blocking=True)
@@ -107,6 +111,21 @@ def imprint(train_loader, model):
         else:
             output_stack = torch.cat((output_stack, output), 0)
             target_stack = torch.cat((target_stack, target), 0)
+        # measure elapsed time
+        batch_time.update(time.time() - end)
+        end = time.time()
+
+        # plot progress
+        bar.suffix  = '({batch}/{size}) Data: {data:.3f}s | Batch: {bt:.3f}s | Total: {total:} | ETA: {eta:}'.format(
+                    batch=batch_idx + 1,
+                    size=len(train_loader),
+                    data=data_time.val,
+                    bt=batch_time.val,
+                    total=bar.elapsed_td,
+                    eta=bar.eta_td
+                    )
+        bar.next()
+    bar.finish()
 
     new_weight = torch.zeros(100, 2048).cuda()
     for i in range(len(target_stack)):
@@ -115,7 +134,7 @@ def imprint(train_loader, model):
     weight = torch.cat((model.classifier.fc.weight.data, new_weight))
     model.classifier.fc = nn.Linear(2048, 200, bias=False)
     model.classifier.fc.weight.data = weight
-
+    
 def validate(val_loader, model):
     batch_time = AverageMeter()
     data_time = AverageMeter()
