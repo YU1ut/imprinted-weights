@@ -6,14 +6,22 @@ class Net(nn.Module):
     def __init__(self, num_classes=100):
         super(Net,self).__init__()
         self.extractor = Extractor()
+        self.embedding = nn.Linear(2048, 256)
         self.classifier = Classifier(num_classes)
         self.s = nn.Parameter(torch.FloatTensor([10]))
 
     def forward(self, x):
         x = self.extractor(x)
+        x = self.embedding(x)
         x = self.l2_norm(x)
         x = self.s * x
         x = self.classifier(x)
+        return x
+
+    def extract(self, x):
+        x = self.extractor(x)
+        x = self.embedding(x)
+        x = self.l2_norm(x)
         return x
 
     def l2_norm(self,input):
@@ -48,7 +56,7 @@ class Extractor(nn.Module):
 class Classifier(nn.Module):
     def __init__(self, num_classes):
         super(Classifier,self).__init__()
-        self.fc = nn.Linear(2048, num_classes, bias=False)
+        self.fc = nn.Linear(256, num_classes, bias=False)
 
     def forward(self, x):
         x = self.fc(x)
