@@ -107,9 +107,13 @@ def imprint(train_loader, model):
             output_stack = torch.cat((output_stack, output), 0)
             target_stack = torch.cat((target_stack, target), 0)
 
+    new_weight = torch.FloatTensor((100, 2048)).cuda()
     for i in range(len(target_stack)):
-        output_i = output_stack[target_stack == i]
-
+        tmp = output_stack[target_stack == i].mean(0)
+        new_weight[i] = tmp / tmp.norm(p=2)
+    weight = torch.cat((model.classifier.fc.weight.data, new_weight))
+    model.classifier.fc = nn.Linear(2048, 200, bias=False)
+    model.classifier.fc.weight.data = weight
 
 def validate(val_loader, model):
     batch_time = AverageMeter()
