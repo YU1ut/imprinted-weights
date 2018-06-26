@@ -74,8 +74,8 @@ def main():
     train_dataset = loader.ImageLoader(
         args.data,
         transforms.Compose([
-            transforms.RandomResizedCrop(224),
-            transforms.RandomHorizontalFlip(),
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
             transforms.ToTensor(),
             normalize,
         ]), train=True, num_classes=200, num_train_sample=args.num_sample, novel_only=True)
@@ -103,8 +103,6 @@ def imprint(train_loader, model):
     # switch to evaluate mode
     model.eval()
 
-    end = time.time()
-    bar = Bar('Processing', max=len(train_loader))
     for batch_idx, (input, target) in enumerate(train_loader):
 
         input = input.cuda()
@@ -120,7 +118,8 @@ def imprint(train_loader, model):
             output_stack = torch.cat((output_stack, output), 0)
             target_stack = torch.cat((target_stack, target), 0)
 
-    
+    for i in range(len(target_stack)):
+        output_i = output_stack[target_stack == i]
 
 
 def validate(val_loader, model):
