@@ -33,6 +33,7 @@ parser.add_argument('--method', '-m', metavar='METHOD', default='imprint',
                     choices=['imporint, random'])
 parser.add_argument('--num-sample', default=1, type=int,
                     metavar='N', help='number of novel sample (default: 1)')
+parser.add_argument('--test-novel-only', action='store_true')
 best_prec1 = 0
 
 
@@ -79,7 +80,7 @@ def main():
             transforms.CenterCrop(224),
             transforms.ToTensor(),
             normalize,
-        ]), num_classes=200),
+        ]), num_classes=200, novel_only=args.test_novel_only),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
 
