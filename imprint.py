@@ -105,7 +105,7 @@ def imprint(train_loader, model):
             # compute output
             output = model.extractor(input)
             output = model.l2_norm(output).cpu()
-            print (output.norm(p=2, dim=1))
+            # print (output.norm(p=2, dim=1))
 
             if batch_idx == 0:
                 output_stack = output
@@ -128,7 +128,7 @@ def imprint(train_loader, model):
                         )
             bar.next()
         bar.finish()
-    '''
+    
     new_weight = torch.zeros(100, 2048)
     for i in range(100):
         tmp = output_stack[target_stack == (i + 100)].mean(0) if args.method == 'imprint' else torch.randn(1, 2048)
@@ -136,7 +136,7 @@ def imprint(train_loader, model):
     weight = torch.cat((model.classifier.fc.weight.data, new_weight.cuda()))
     model.classifier.fc = nn.Linear(2048, 200, bias=False)
     model.classifier.fc.weight.data = weight
-    '''
+    
 def validate(val_loader, model):
     batch_time = AverageMeter()
     data_time = AverageMeter()
@@ -158,7 +158,7 @@ def validate(val_loader, model):
 
             # compute output
             output = model(input)
-
+            print (output.max(1, keepdim=True)[1], target)
             # measure accuracy and record loss
             prec1, prec5 = accuracy(output, target, topk=(1, 5))
             top1.update(prec1.item(), input.size(0))
