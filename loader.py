@@ -17,6 +17,7 @@ class ImageLoader(torch.utils.data.Dataset):
         img_labels = pd.read_csv(os.path.join(root, "image_class_labels.txt"), sep=" ", header=None,  names=['idx', 'label'])
         train_test_split = pd.read_csv(os.path.join(root, "train_test_split.txt"), sep=" ", header=None,  names=['idx', 'train_flag'])
         data = pd.concat([img_paths, img_labels, train_test_split], axis=1)
+        data = data[data['train_flag'] == train]
         data['label'] = data['label'] - 1
         data = data[data['label'] < num_classes]
         base_data = data[data['label'] < 100]
@@ -29,7 +30,7 @@ class ImageLoader(torch.utils.data.Dataset):
             data = novel_data
         else:
             data = pd.concat([base_data, novel_data])
-        imgs = data[data['train_flag'] == train].reset_index(drop=True)
+        imgs = data.reset_index(drop=True)
         
         if len(imgs) == 0:
             raise(RuntimeError("no csv file"))
