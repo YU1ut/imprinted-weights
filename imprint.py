@@ -31,6 +31,8 @@ parser.add_argument('--resume', default='', type=str, metavar='PATH',
                     help='path to latest checkpoint (default: none)')
 parser.add_argument('--method', '-m', metavar='METHOD', default='imprint',
                     choices=['imporint, random'])
+parser.add_argument('--num-sample', default=1, type=int,
+                    metavar='N', help='number of novel sample (default: 1)')
 best_prec1 = 0
 
 
