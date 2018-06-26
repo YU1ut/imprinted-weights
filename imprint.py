@@ -100,10 +100,9 @@ def imprint(train_loader, model):
         data_time.update(time.time() - end)
 
         input = input.cuda()
-        target = target.cuda(non_blocking=True)
 
         # compute output
-        output = model.extractor(input)
+        output = model.extractor(input).cpu()
 
         if batch_idx == 0:
             output_stack = output
@@ -127,11 +126,11 @@ def imprint(train_loader, model):
         bar.next()
     bar.finish()
 
-    new_weight = torch.zeros(100, 2048).cuda()
+    new_weight = torch.zeros(100, 2048)
     for i in range(len(target_stack)):
         tmp = output_stack[target_stack == (i + 100)].mean(0) if args.method == 'imprint' else torch.randn(2048)
         new_weight[i] = tmp / tmp.norm(p=2)
-    weight = torch.cat((model.classifier.fc.weight.data, new_weight))
+    weight = torch.cat((model.classifier.fc.weight.data, new_weight.cuda()))
     model.classifier.fc = nn.Linear(2048, 200, bias=False)
     model.classifier.fc.weight.data = weight
     
