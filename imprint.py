@@ -157,6 +157,7 @@ def validate(val_loader, model):
 
             # compute output
             output = model(input)
+            print (output)
 
             # measure accuracy and record loss
             prec1, prec5 = accuracy(output, target, topk=(1, 5))
