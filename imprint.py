@@ -103,8 +103,7 @@ def imprint(train_loader, model):
             input = input.cuda()
 
             # compute output
-            output = model.extractor(input)
-            output = model.l2_norm(output).cpu()
+            output = model.extract(input)
 
             if batch_idx == 0:
                 output_stack = output
@@ -128,12 +127,12 @@ def imprint(train_loader, model):
             bar.next()
         bar.finish()
     
-    new_weight = torch.zeros(100, 2048)
+    new_weight = torch.zeros(100, 256)
     for i in range(100):
-        tmp = output_stack[target_stack == (i + 100)].mean(0) if args.method == 'imprint' else torch.randn(1, 2048)
+        tmp = output_stack[target_stack == (i + 100)].mean(0) if args.method == 'imprint' else torch.randn(1, 256)
         new_weight[i] = tmp / tmp.norm(p=2)
     weight = torch.cat((model.classifier.fc.weight.data, new_weight.cuda()))
-    model.classifier.fc = nn.Linear(2048, 200, bias=False)
+    model.classifier.fc = nn.Linear(256, 200, bias=False)
     model.classifier.fc.weight.data = weight
     
 def validate(val_loader, model):
