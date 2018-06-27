@@ -8,6 +8,8 @@ This is an unofficial pytorch implementation of [Low-Shot Learning with Imprinte
 - torchvision
 - progress
 - matplotlib
+- numpy
+- scikit-learn
 
 ## Major Difference
 Paper: InceptionV1 + RMSProp
@@ -55,6 +57,13 @@ python imprint.py --model pretrain_checkpoint/model_best.pth.tar --num-sample 1
 For more details and parameters, please refer to --help option.
 All w/o FT results of Table 1 and Table 2 in the paper can be reproduced by this script.
 
+### Imprint weights + FT
+Apply fine-tuning to the imprinting model.
+```
+python imprint_ft.py --model pretrain_checkpoint/model_best.pth.tar --num-sample 1
+```
+All w/ FT results of Table 1 and Table 2 in the paper can be reproduced by this script.
+
 ## Results
 ### 200-way top-1 accuracy for novel-class examples in CUB-200-2011
 #### w/o FT
@@ -64,8 +73,18 @@ All w/o FT results of Table 1 and Table 2 in the paper can be reproduced by this
 |**Rand-noFT**|**0.00** |**0.00** |**0.00** |**0.00** |**0.00** |
 |Imprinting (paper)|21.26 |28.69 |39.52 |45.77 |49.32|
 |**Imprinting** |**28.77** |**37.61** |**50.20** |**56.31** |**60.58**
-|Imprinting + Aug  (paper) |21.40 |30.03 |39.35 |46.35 |49.80|
+|Imprinting + Aug (paper) |21.40 |30.03 |39.35 |46.35 |49.80|
 |**Imprinting + Aug** |**28.81** |**39.04** |**49.90** |**56.18** |**60.44**|
+
+#### w/ FT
+| n = | 1| 2 | 5| 10| 20|
+|:---|:---:|:---:|:---:|:---:|:---:|
+|Rand + FT (paper) |5.25 |13.41 |34.95| 54.33 |65.60|
+|**Rand + FT**|**x** |**x** |**x** |**x** |**x** |
+|Imprinting + FT (paper)|18.67 |30.17| 46.08 |59.39 |68.77|
+|**Imprinting** |**x** |**x** |**x** |**x** |**x** |
+|AllClassJoint (paper) |3.89 |10.82 |33.00 |50.24 |64.88|
+|**Imprinting + Aug** |**x** |**x** |**x** |**x** |**x** |
 
 ### 200-way top-1 accuracy measured across examples in all classes of CUB-200-2011
 #### w/o FT
@@ -75,5 +94,15 @@ All w/o FT results of Table 1 and Table 2 in the paper can be reproduced by this
 |**Rand-noFT**|**41.39** |**41.39** |**41.39** |**41.39** |**41.39** |
 |Imprinting (paper)|44.75| 48.21| 52.95| 55.99 |57.47|
 |**Imprinting** |**53.50** |**57.35** |**62.65** |**65.38** |**67.09**|
-|Imprinting + Aug  (paper) |44.60| 48.48| 52.78 |56.51| 57.84|
+|Imprinting + Aug (paper) |44.60| 48.48| 52.78 |56.51| 57.84|
 |**Imprinting + Aug** |**53.40** |**57.47** |**62.56** |**65.21** |**67.26**|
+
+#### w/ FT
+| n = | 1| 2 | 5| 10| 20|
+|:---|:---:|:---:|:---:|:---:|:---:|
+|Rand + FT (paper) |39.26 |43.36| 53.69| 63.17| 68.75|
+|**Rand + FT**|**x** |**x** |**x** |**x** |**x** |
+|Imprinting + FT (paper)|45.81 |50.41 |59.15| 64.65| 68.73|
+|**Imprinting** |**x** |**x** |**x** |**x** |**x** |
+|AllClassJoint (paper) |38.02 |41.89| 52.24| 61.11| 68.31|
+|**Imprinting + Aug** |**x** |**x** |**x** |**x** |**x** |
