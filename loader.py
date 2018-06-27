@@ -79,23 +79,7 @@ class ImageLoader(torch.utils.data.Dataset):
     def __len__(self):
         return len(self.imgs)
         
-class Sampler(object):
-    """Base class for all Samplers.
-    Every Sampler subclass has to provide an __iter__ method, providing a way
-    to iterate over indices of dataset elements, and a __len__ method that
-    returns the length of the returned iterators.
-    """
-
-    def __init__(self, data_source):
-        pass
-
-    def __iter__(self):
-        raise NotImplementedError
-
-    def __len__(self):
-        raise NotImplementedError
-
-class StratifiedSampler(Sampler):
+class StratifiedSampler(torch.utils.data.Sampler):
     """Stratified Sampling
     Provides equal representation of target classes in each batch
     """
