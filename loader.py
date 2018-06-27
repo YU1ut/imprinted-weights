@@ -78,8 +78,9 @@ class ImageLoader(torch.utils.data.Dataset):
 
     def __len__(self):
         return len(self.imgs)
-        
-class StratifiedSampler(torch.utils.data.Sampler):
+
+
+class StratifiedSampler(torch.utils.data.sampler.Sampler):
     """Stratified Sampling
     Provides equal representation of target classes in each batch
     """
