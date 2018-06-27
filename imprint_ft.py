@@ -98,10 +98,8 @@ def main():
         train=True, num_classes=200, 
         num_train_sample=args.num_sample)
 
-    sampler = loader.StratifiedSampler(torch.from_numpy(np.array(train_dataset.imgs['label'].tolist())), args.batch_size)
-
     train_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=args.batch_size, shuffle=False, sampler=sampler,
+        train_dataset, batch_size=args.batch_size, sampler=train_dataset.get_balanced_sampler,
         num_workers=args.workers, pin_memory=True)
 
     val_loader = torch.utils.data.DataLoader(
