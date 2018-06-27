@@ -117,6 +117,8 @@ def main():
     # imprint weights first
     imprint(train_loader, model)
 
+    print('    Total params: %.2fM' % (sum(p.numel() for p in model.parameters())/1000000.0))
+
     # define loss function (criterion) and optimizer
     criterion = nn.CrossEntropyLoss().cuda()
 
@@ -138,13 +140,14 @@ def main():
     else:
         logger = Logger(os.path.join(args.checkpoint, 'log.txt'), title=title)
         logger.set_names(['Learning Rate', 'Train Loss', 'Valid Loss', 'Train Acc.', 'Valid Acc.'])
+
     if args.evaluate:
         validate(val_loader, model, criterion)
         return
 
     for epoch in range(args.start_epoch, args.epochs):
         scheduler.step()
-        lr = optimizer.param_groups[1]['lr']
+        lr = optimizer.param_groups[0]['lr']
         print('\nEpoch: [%d | %d] LR: %f' % (epoch + 1, args.epochs, lr))
         # train for one epoch
         train_loss, train_acc = train(train_loader, model, criterion, optimizer, epoch)
