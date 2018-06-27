@@ -112,7 +112,7 @@ def main():
     sampler = loader.StratifiedSampler(torch.from_numpy(np.array(ft_dataset.imgs['label'].tolist())), args.batch_size)
 
     ft_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=args.batch_size, shuffle=False, sampler=sampler,
+        ft_dataset, batch_size=args.batch_size, shuffle=False, sampler=sampler,
         num_workers=args.workers, pin_memory=True)
 
     # imprint weights first
