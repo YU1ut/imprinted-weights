@@ -137,7 +137,7 @@ def imprint(train_loader, model):
     
     new_weight = torch.zeros(100, 256)
     for i in range(100):
-        tmp = output_stack[target_stack == (i + 100)].mean(0) if not args.random else torch.randn(1, 256)
+        tmp = output_stack[target_stack == (i + 100)].mean(0) if not args.random else torch.randn(256)
         new_weight[i] = tmp / tmp.norm(p=2)
     weight = torch.cat((model.classifier.fc.weight.data, new_weight.cuda()))
     model.classifier.fc = nn.Linear(256, 200, bias=False)
