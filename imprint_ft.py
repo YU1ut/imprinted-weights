@@ -148,7 +148,7 @@ def main():
         lr = optimizer.param_groups[0]['lr']
         print('\nEpoch: [%d | %d] LR: %f' % (epoch + 1, args.epochs, lr))
         # train for one epoch
-        # train_loss, train_acc = train(train_loader, model, criterion, optimizer, epoch)
+        train_loss, train_acc = train(train_loader, model, criterion, optimizer, epoch)
 
         # evaluate on validation set
         test_loss, test_acc = validate(val_loader, model, criterion)
