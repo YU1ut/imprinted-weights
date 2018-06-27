@@ -13,6 +13,7 @@ import torch.utils.data
 import torchvision.transforms as transforms
 import models
 import loader
+import numpy as np
 
 from utils import Bar, Logger, AverageMeter, accuracy, mkdir_p, savefig
 
