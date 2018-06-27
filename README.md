@@ -9,7 +9,7 @@ This is an unofficial pytorch implementation of [Low-Shot Learning with Imprinte
 - progress
 - matplotlib
 
-## Major Difference: 
+## Major Difference
 Paper: InceptionV1 + RMSProp
 
 This implementation: ResNet-50 + SGD
@@ -61,19 +61,19 @@ All w/o FT results of Table 1 and Table 2 in the paper can be reproduced by this
 | n = | 1| 2 | 5| 10| 20|
 |:---|:---:|:---:|:---:|:---:|:---:|
 |Rand-noFT (paper) |0.17 |0.17 |0.17 |0.17 |0.17 |
-|Rand-noFT|0.00 |0.00 |0.00 |0.00 |0.00 |
-|Imprinting (paper)|21.26 |28.69 |39.52 |45.77 |49.32
-|Imprinting |28.77 |37.61 |50.20 |56.31 |60.58
-|Imprinting + Aug  (paper) |21.40 |30.03 |39.35 |46.35 |49.80
-|Imprinting + Aug |28.81 |39.04 |49.90 |56.18 |60.44
+|**Rand-noFT**|**0.00** |**0.00** |**0.00** |**0.00** |**0.00** |
+|Imprinting (paper)|21.26 |28.69 |39.52 |45.77 |49.32|
+|**Imprinting** |**28.77** |**37.61** |**50.20** |**56.31** |**60.58**
+|Imprinting + Aug  (paper) |21.40 |30.03 |39.35 |46.35 |49.80|
+|**Imprinting + Aug** |**28.81** |**39.04** |**49.90** |**56.18** |**60.44**|
 
 ### 200-way top-1 accuracy measured across examples in all classes of CUB-200-2011
 #### w/o FT
 | n = | 1| 2 | 5| 10| 20|
 |:---|:---:|:---:|:---:|:---:|:---:|
-|Rand-noFT (paper) |37.36| 37.36| 37.36| 37.36 |37.36
-|Rand-noFT|41.39 |41.39 |41.39 |41.39 |41.39 |
-|Imprinting (paper)|44.75| 48.21| 52.95| 55.99 |57.47
-|Imprinting |53.50 |57.35 |62.65 |65.38 |67.09
-|Imprinting + Aug  (paper) |44.60| 48.48| 52.78 |56.51| 57.84
-|Imprinting + Aug |53.40 |57.47 |62.56 |65.21 |67.26
+|Rand-noFT (paper) |37.36| 37.36| 37.36| 37.36 |37.36|
+|**Rand-noFT**|**41.39** |**41.39** |**41.39** |**41.39** |**41.39** |
+|Imprinting (paper)|44.75| 48.21| 52.95| 55.99 |57.47|
+|**Imprinting** |**53.50** |**57.35** |**62.65** |**65.38** |**67.09**|
+|Imprinting + Aug  (paper) |44.60| 48.48| 52.78 |56.51| 57.84|
+|**Imprinting + Aug** |**53.40** |**57.47** |**62.56** |**65.21** |**67.26**|
