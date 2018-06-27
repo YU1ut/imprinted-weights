@@ -32,9 +32,7 @@ parser.add_argument('--lr', '--learning-rate', default=0.001, type=float,
 parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
                     help='momentum')
 parser.add_argument('--weight-decay', '--wd', default=1e-4, type=float,
-                    metavar='W', help='weight decay (default: 1e-4)') 
-parser.add_argument('--print-freq', '-p', default=10, type=int,
-                    metavar='N', help='print frequency (default: 10)')
+                    metavar='W', help='weight decay (default: 1e-4)')
 parser.add_argument('-c', '--checkpoint', default='pretrain_checkpoint', type=str, metavar='PATH',
                     help='path to save checkpoint (default: pretrain_checkpoint)')
 parser.add_argument('--resume', default='', type=str, metavar='PATH',
@@ -158,7 +156,7 @@ def train(train_loader, model, criterion, optimizer, epoch):
     model.train()
 
     end = time.time()
-    bar = Bar('Processing', max=len(train_loader))
+    bar = Bar('Training', max=len(train_loader))
     for batch_idx, (input, target) in enumerate(train_loader):
         # measure data loading time
         data_time.update(time.time() - end)
@@ -212,7 +210,7 @@ def validate(val_loader, model, criterion):
 
     # switch to evaluate mode
     model.eval()
-    bar = Bar('Processing', max=len(val_loader))
+    bar = Bar('Testing', max=len(val_loader))
     with torch.no_grad():
         end = time.time()
         for batch_idx, (input, target) in enumerate(val_loader):

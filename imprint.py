@@ -23,8 +23,6 @@ parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
 parser.add_argument('-b', '--batch-size', default=64, type=int,
                     metavar='N', help='mini-batch size (default: 64)')
-parser.add_argument('--print-freq', '-p', default=10, type=int,
-                    metavar='N', help='print frequency (default: 10)')
 parser.add_argument('-c', '--checkpoint', default='imprint_checkpoint', type=str, metavar='PATH',
                     help='path to save checkpoint (default: imprint_checkpoint)')
 parser.add_argument('--model', default='', type=str, metavar='PATH',
@@ -95,7 +93,12 @@ def main():
         num_workers=args.workers, pin_memory=True)
 
     imprint(train_loader, model)
-    validate(val_loader, model)
+    test_acc = validate(val_loader, model)
+
+    save_checkpoint({
+            'state_dict': model.state_dict(),
+            'best_prec1': test_acc,
+        }, checkpoint=args.checkpoint)
 
 
 def imprint(train_loader, model):
@@ -104,7 +107,7 @@ def imprint(train_loader, model):
     # switch to evaluate mode
     model.eval()
     end = time.time()
-    bar = Bar('Processing', max=len(train_loader))
+    bar = Bar('Imprinting', max=len(train_loader))
     with torch.no_grad():
         for batch_idx, (input, target) in enumerate(train_loader):
             # measure data loading time
@@ -148,13 +151,12 @@ def imprint(train_loader, model):
 def validate(val_loader, model):
     batch_time = AverageMeter()
     data_time = AverageMeter()
-    losses = AverageMeter()
     top1 = AverageMeter()
     top5 = AverageMeter()
 
     # switch to evaluate mode
     model.eval()
-    bar = Bar('Processing', max=len(val_loader))
+    bar = Bar('Testing', max=len(val_loader))
     with torch.no_grad():
         end = time.time()
         for batch_idx, (input, target) in enumerate(val_loader):
@@ -167,7 +169,7 @@ def validate(val_loader, model):
             # compute output
             output = model(input)
 
-            # measure accuracy and record loss
+            # measure accuracy
             prec1, prec5 = accuracy(output, target, topk=(1, 5))
             top1.update(prec1.item(), input.size(0))
             top5.update(prec5.item(), input.size(0))
@@ -189,14 +191,12 @@ def validate(val_loader, model):
                         )
             bar.next()
         bar.finish()
-    return (losses.avg, top1.avg)
+    return top1.avg
 
 
-def save_checkpoint(state, is_best, checkpoint='checkpoint', filename='checkpoint.pth.tar'):
+def save_checkpoint(state, checkpoint='checkpoint', filename='checkpoint.pth.tar'):
     filepath = os.path.join(checkpoint, filename)
     torch.save(state, filepath)
-    if is_best:
-        shutil.copyfile(filepath, os.path.join(checkpoint, 'model_best.pth.tar'))
 
 if __name__ == '__main__':
     main()
