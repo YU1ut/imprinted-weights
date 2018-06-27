@@ -27,8 +27,8 @@ parser.add_argument('--print-freq', '-p', default=10, type=int,
                     metavar='N', help='print frequency (default: 10)')
 parser.add_argument('-c', '--checkpoint', default='imprint_checkpoint', type=str, metavar='PATH',
                     help='path to save checkpoint (default: imprint_checkpoint)')
-parser.add_argument('--resume', default='', type=str, metavar='PATH',
-                    help='path to latest checkpoint (default: none)')
+parser.add_argument('--model', default='', type=str, metavar='PATH',
+                    help='path to model (default: none)')
 parser.add_argument('--random', action='store_true', help='whether use random novel weights')
 parser.add_argument('--num-sample', default=1, type=int,
                     metavar='N', help='number of novel sample (default: 1)')
@@ -47,14 +47,14 @@ def main():
     model = models.Net().cuda()
 
 
-    print('==> Resuming from checkpoint..')
-    assert os.path.isfile(args.resume), 'Error: no checkpoint directory found!'
-    checkpoint = torch.load(args.resume)
+    print('==> Reading from model checkpoint..')
+    assert os.path.isfile(args.model), 'Error: no model checkpoint directory found!'
+    checkpoint = torch.load(args.model)
     args.start_epoch = checkpoint['epoch']
     best_prec1 = checkpoint['best_prec1']
     model.load_state_dict(checkpoint['state_dict'])
-    print("=> loaded checkpoint '{}' (epoch {})"
-            .format(args.resume, checkpoint['epoch']))
+    print("=> loaded model checkpoint '{}' (epoch {})"
+            .format(args.model, checkpoint['epoch']))
     cudnn.benchmark = True
 
     # Data loading code
@@ -76,7 +76,9 @@ def main():
     train_dataset = loader.ImageLoader(
         args.data,
         train_trasforms,
-        train=True, num_classes=200, num_train_sample=args.num_sample, novel_only=True, aug=args.aug)
+        train=True, num_classes=200, 
+        num_train_sample=args.num_sample, 
+        novel_only=True, aug=args.aug)
 
     train_loader = torch.utils.data.DataLoader(
         train_dataset, batch_size=args.batch_size, shuffle=False,
