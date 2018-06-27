@@ -239,7 +239,7 @@ def train(train_loader, model, criterion, optimizer, epoch):
 
         input = input.cuda()
         target = target.cuda(non_blocking=True)
-        print (target)
+        
         # compute output
         output = model(input)
         loss = criterion(output, target)
