@@ -22,19 +22,18 @@ parser.add_argument('--data', metavar='DIR', default='CUB_200_2011',
 parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
 parser.add_argument('-b', '--batch-size', default=64, type=int,
-                    metavar='N', help='mini-batch size (default: 256)')
+                    metavar='N', help='mini-batch size (default: 64)')
 parser.add_argument('--print-freq', '-p', default=10, type=int,
                     metavar='N', help='print frequency (default: 10)')
 parser.add_argument('-c', '--checkpoint', default='imprint_checkpoint', type=str, metavar='PATH',
-                    help='path to save checkpoint (default: checkpoint)')
+                    help='path to save checkpoint (default: imprint_checkpoint)')
 parser.add_argument('--resume', default='', type=str, metavar='PATH',
                     help='path to latest checkpoint (default: none)')
-parser.add_argument('--method', '-m', metavar='METHOD', default='imprint',
-                    choices=['imporint, random'])
+parser.add_argument('--random', action='store_true', help='whether use random novel weights')
 parser.add_argument('--num-sample', default=1, type=int,
                     metavar='N', help='number of novel sample (default: 1)')
-parser.add_argument('--test-novel-only', action='store_true')
-parser.add_argument('--aug', action='store_true')
+parser.add_argument('--test-novel-only', action='store_true', help='whether only test on novel classes')
+parser.add_argument('--aug', action='store_true', help='whether use data augmentation during training')
 best_prec1 = 0
 
 
@@ -138,7 +137,7 @@ def imprint(train_loader, model):
     
     new_weight = torch.zeros(100, 256)
     for i in range(100):
-        tmp = output_stack[target_stack == (i + 100)].mean(0) if args.method == 'imprint' else torch.randn(1, 256)
+        tmp = output_stack[target_stack == (i + 100)].mean(0) if not args.random else torch.randn(1, 256)
         new_weight[i] = tmp / tmp.norm(p=2)
     weight = torch.cat((model.classifier.fc.weight.data, new_weight.cuda()))
     model.classifier.fc = nn.Linear(256, 200, bias=False)
