@@ -9,7 +9,6 @@ This is an unofficial pytorch implementation of [Low-Shot Learning with Imprinte
 - progress
 - matplotlib
 - numpy
-- scikit-learn
 
 ## Major Difference
 Paper: InceptionV1 + RMSProp
