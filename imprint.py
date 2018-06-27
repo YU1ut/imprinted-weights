@@ -34,6 +34,7 @@ parser.add_argument('--method', '-m', metavar='METHOD', default='imprint',
 parser.add_argument('--num-sample', default=1, type=int,
                     metavar='N', help='number of novel sample (default: 1)')
 parser.add_argument('--test-novel-only', action='store_true')
+parser.add_argument('--aug', action='store_true')
 best_prec1 = 0
 
 
@@ -61,14 +62,22 @@ def main():
     normalize = transforms.Normalize(mean=[0.5, 0.5, 0.5],
                                      std=[0.5, 0.5, 0.5])
 
-    train_dataset = loader.ImageLoader(
-        args.data,
-        transforms.Compose([
+    train_trasforms = transforms.Compose([
             transforms.Resize(256),
             transforms.CenterCrop(224),
             transforms.ToTensor(),
+            normalize]) if not args.aug else transforms.Compose([
+            transforms.Resize(256),
+            transforms.RandomCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
             normalize,
-        ]), train=True, num_classes=200, num_train_sample=args.num_sample, novel_only=True)
+        ])
+
+    train_dataset = loader.ImageLoader(
+        args.data,
+        train_trasforms,
+        train=True, num_classes=200, num_train_sample=args.num_sample, novel_only=True, aug=args.aug)
 
     train_loader = torch.utils.data.DataLoader(
         train_dataset, batch_size=args.batch_size, shuffle=False,
