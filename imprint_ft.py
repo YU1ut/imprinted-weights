@@ -62,7 +62,6 @@ def main():
     print('==> Reading from model checkpoint..')
     assert os.path.isfile(args.model), 'Error: no model checkpoint directory found!'
     checkpoint = torch.load(args.model)
-    args.start_epoch = checkpoint['epoch']
     best_prec1 = checkpoint['best_prec1']
     model.load_state_dict(checkpoint['state_dict'])
     print("=> loaded model checkpoint '{}' (epoch {})"
