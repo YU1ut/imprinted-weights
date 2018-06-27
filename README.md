@@ -49,9 +49,9 @@ python pretrain.py
 Trained models will be saved at `pretrain_checkpoint`.
 
 ### Imprint weights
-Use 1 novel exemplar from the training split to imprint weights.
+Use N novel exemplar from the training split to imprint weights.
 ```
-python imprint.py --model pretrain_checkpoint/model_best.pth.tar --num-sample 1
+python imprint.py --model pretrain_checkpoint/model_best.pth.tar --num-sample N
 ```
 For more details and parameters, please refer to --help option.
 All w/o FT results of Table 1 and Table 2 in the paper can be reproduced by this script.
@@ -59,7 +59,7 @@ All w/o FT results of Table 1 and Table 2 in the paper can be reproduced by this
 ### Imprint weights + FT
 Apply fine-tuning to the imprinting model.
 ```
-python imprint_ft.py --model pretrain_checkpoint/model_best.pth.tar --num-sample 1
+python imprint_ft.py --model pretrain_checkpoint/model_best.pth.tar --num-sample N
 ```
 All w/ FT results of Table 1 and Table 2 in the paper can be reproduced by this script.
 
