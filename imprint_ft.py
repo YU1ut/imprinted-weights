@@ -99,7 +99,7 @@ def main():
         num_train_sample=args.num_sample)
 
     train_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=args.batch_size, sampler=train_dataset.get_balanced_sampler,
+        train_dataset, batch_size=args.batch_size, sampler=train_dataset.get_balanced_sampler(),
         num_workers=args.workers, pin_memory=True)
 
     val_loader = torch.utils.data.DataLoader(
