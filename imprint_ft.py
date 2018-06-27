@@ -72,7 +72,7 @@ def main():
     normalize = transforms.Normalize(mean=[0.5, 0.5, 0.5],
                                      std=[0.5, 0.5, 0.5])
 
-    train_dataset = loader.ImageLoader(
+    novel_dataset = loader.ImageLoader(
         args.data, transforms.Compose([
             transforms.Resize(256),
             transforms.CenterCrop(224),
@@ -83,8 +83,25 @@ def main():
         num_train_sample=args.num_sample, 
         novel_only=True)
 
+    novel_loader = torch.utils.data.DataLoader(
+        novel_dataset, batch_size=args.batch_size, shuffle=False,
+        num_workers=args.workers, pin_memory=True)
+
+    train_dataset = loader.ImageLoader(
+        args.data, transforms.Compose([
+            transforms.Resize(256),
+            transforms.RandomCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            normalize,
+        ]),
+        train=True, num_classes=200, 
+        num_train_sample=args.num_sample)
+
+    sampler = loader.StratifiedSampler(torch.from_numpy(np.array(train_dataset.imgs['label'].tolist())), args.batch_size)
+
     train_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=args.batch_size, shuffle=False,
+        train_dataset, batch_size=args.batch_size, shuffle=False, sampler=sampler,
         num_workers=args.workers, pin_memory=True)
 
     val_loader = torch.utils.data.DataLoader(
@@ -97,25 +114,8 @@ def main():
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
 
-    ft_dataset = loader.ImageLoader(
-        args.data, transforms.Compose([
-            transforms.Resize(256),
-            transforms.RandomCrop(224),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            normalize,
-        ]),
-        train=True, num_classes=200, 
-        num_train_sample=args.num_sample)
-
-    sampler = loader.StratifiedSampler(torch.from_numpy(np.array(ft_dataset.imgs['label'].tolist())), args.batch_size)
-
-    ft_loader = torch.utils.data.DataLoader(
-        ft_dataset, batch_size=args.batch_size, shuffle=False, sampler=sampler,
-        num_workers=args.workers, pin_memory=True)
-
     # imprint weights first
-    imprint(train_loader, model)
+    imprint(novel_loader, model)
 
     print('    Total params: %.2fM' % (sum(p.numel() for p in model.parameters())/1000000.0))
 
@@ -150,7 +150,7 @@ def main():
         lr = optimizer.param_groups[0]['lr']
         print('\nEpoch: [%d | %d] LR: %f' % (epoch + 1, args.epochs, lr))
         # train for one epoch
-        train_loss, train_acc = train(ft_loader, model, criterion, optimizer, epoch)
+        train_loss, train_acc = train(train_loader, model, criterion, optimizer, epoch)
 
         # evaluate on validation set
         test_loss, test_acc = validate(val_loader, model, criterion)
@@ -176,15 +176,15 @@ def main():
     print(best_prec1)
 
 
-def imprint(train_loader, model):
+def imprint(novel_loader, model):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     # switch to evaluate mode
     model.eval()
     end = time.time()
-    bar = Bar('Imprinting', max=len(train_loader))
+    bar = Bar('Imprinting', max=len(novel_loader))
     with torch.no_grad():
-        for batch_idx, (input, target) in enumerate(train_loader):
+        for batch_idx, (input, target) in enumerate(novel_loader):
             # measure data loading time
             data_time.update(time.time() - end)
 
@@ -206,7 +206,7 @@ def imprint(train_loader, model):
             # plot progress
             bar.suffix  = '({batch}/{size}) Data: {data:.3f}s | Batch: {bt:.3f}s | Total: {total:} | ETA: {eta:}'.format(
                         batch=batch_idx + 1,
-                        size=len(train_loader),
+                        size=len(novel_loader),
                         data=data_time.val,
                         bt=batch_time.val,
                         total=bar.elapsed_td,
