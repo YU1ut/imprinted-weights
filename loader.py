@@ -113,7 +113,7 @@ class StratifiedSampler(Sampler):
 
     def gen_sample_array(self):
         s = StratifiedShuffleSplit(n_splits=self.n_splits, test_size=0.5)
-        X = th.randn(self.class_vector.size(0),2).numpy()
+        X = torch.randn(self.class_vector.size(0),2).numpy()
         y = self.class_vector.numpy()
         s.get_n_splits(X, y)
 
