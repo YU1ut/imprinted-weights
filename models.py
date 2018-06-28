@@ -3,18 +3,22 @@ import torch.nn as nn
 import torchvision.models as models
 
 class Net(nn.Module):
-    def __init__(self, num_classes=100):
+    def __init__(self, num_classes=100, norm=True, scale=True):
         super(Net,self).__init__()
         self.extractor = Extractor()
-        self.embedding = nn.Linear(2048, 256)
+        self.embedding = Embedding()
         self.classifier = Classifier(num_classes)
         self.s = nn.Parameter(torch.FloatTensor([10]))
+        self.norm = norm
+        self.scale = scale
 
-    def forward(self, x):
+    def forward(self, x, norm=True, scale=True):
         x = self.extractor(x)
         x = self.embedding(x)
-        x = self.l2_norm(x)
-        x = self.s * x
+        if self.norm:
+            x = self.l2_norm(x)
+        if self.scale:
+            x = self.s * x
         x = self.classifier(x)
         return x
 
@@ -51,6 +55,15 @@ class Extractor(nn.Module):
     def forward(self, x):
         x = self.extractor(x)
         x = x.view(x.size(0), -1)
+        return x
+
+class Embedding(nn.Module):
+    def __init__(self):
+        super(Embedding,self).__init__()
+        self.fc = nn.Linear(2048, 256)
+
+    def forward(self, x):
+        x = self.fc(x)
         return x
 
 class Classifier(nn.Module):
