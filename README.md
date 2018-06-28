@@ -9,6 +9,7 @@ This is an unofficial pytorch implementation of [Low-Shot Learning with Imprinte
 - progress
 - matplotlib
 - numpy
+- pandas
 
 ## Major Difference
 Paper: InceptionV1 + RMSProp
@@ -87,7 +88,7 @@ All w/ FT results of Table 1 and Table 2 in the paper can be reproduced by this 
 |Rand + FT (paper) |5.25 |13.41 |34.95| 54.33 |65.60|
 |Imprinting + FT (paper)|18.67 |30.17| 46.08 |59.39 |68.77|
 |AllClassJoint (paper) |3.89 |10.82 |33.00 |50.24 |64.88|
-|**Rand + FT**|**2.39** |**13.00** |**36.11** |**x** |**x** |
+|**Rand + FT**|**2.39** |**13.00** |**36.11** |**56.83** |**69.90** |
 |**Imprinting + FT** |**26.14** |**34.81** |**54.40** |**63.41** |**73.41** |
 |**AllClassJoint** |**x** |**x** |**x** |**x** |**x** |
 
@@ -112,7 +113,7 @@ All w/ FT results of Table 1 and Table 2 in the paper can be reproduced by this 
 |Rand + FT (paper) |39.26 |43.36| 53.69| 63.17| 68.75|
 |Imprinting + FT (paper)|45.81 |50.41 |59.15| 64.65| 68.73|
 |AllClassJoint (paper) |38.02 |41.89| 52.24| 61.11| 68.31|
-|**Rand + FT**|**41.27** |**46.41** |**57.71** |**x** |**x** |
+|**Rand + FT**|**41.27** |**46.41** |**57.71** |**67.79** |**74.72** |
 |**Imprinting + FT** |**53.02** |**57.82** |**67.21** |**71.73** |**76.25** |
 |**AllClassJoint** |**x** |**x** |**x** |**x** |**x** |
 
