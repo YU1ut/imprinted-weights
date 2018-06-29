@@ -12,7 +12,7 @@ class Net(nn.Module):
         self.norm = norm
         self.scale = scale
 
-    def forward(self, x, norm=True, scale=True):
+    def forward(self, x):
         x = self.extractor(x)
         x = self.embedding(x)
         if self.norm:

@@ -1,4 +1,3 @@
-# :construction: Work in Progress :construction:
 # imprinted-weights
 This is an unofficial pytorch implementation of [Low-Shot Learning with Imprinted Weights](http://openaccess.thecvf.com/content_cvpr_2018/papers/Qi_Low-Shot_Learning_With_CVPR_2018_paper.pdf). 
 
@@ -70,6 +69,12 @@ Trained models will be saved at `imprint_ft_checkpoint`.
 
 All w/ FT results of Table 1 and Table 2 in the paper can be reproduced by this script.
 
+### All class joint
+Train model for base and novel classes jointly without a separate low-shot learning phase.
+```
+python alljoint.py --num-sample N
+```
+
 ## Results
 ### 200-way top-1 accuracy for novel-class examples in CUB-200-2011
 #### w/o FT
@@ -90,7 +95,7 @@ All w/ FT results of Table 1 and Table 2 in the paper can be reproduced by this 
 |AllClassJoint (paper) |3.89 |10.82 |33.00 |50.24 |64.88|
 |**Rand + FT**|**2.39** |**13.00** |**36.11** |**56.83** |**69.90** |
 |**Imprinting + FT** |**26.14** |**34.81** |**54.40** |**63.41** |**73.41** |
-|**AllClassJoint** |**x** |**x** |**x** |**x** |**x** |
+|**AllClassJoint** |**7.34** |**18.09** |**45.67** |**60.58** |**73.41** |
 
 
 
@@ -115,5 +120,5 @@ All w/ FT results of Table 1 and Table 2 in the paper can be reproduced by this 
 |AllClassJoint (paper) |38.02 |41.89| 52.24| 61.11| 68.31|
 |**Rand + FT**|**41.27** |**46.41** |**57.71** |**67.79** |**74.72** |
 |**Imprinting + FT** |**53.02** |**57.82** |**67.21** |**71.73** |**76.25** |
-|**AllClassJoint** |**x** |**x** |**x** |**x** |**x** |
+|**AllClassJoint** |**42.73** |**48.43** |**62.20** |**69.95** |**75.89** |
 
