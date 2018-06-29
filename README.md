@@ -28,6 +28,10 @@ imprinted-weights
 │   models.py
 │   loader.py
 │   imprint.py
+│   imprint_ft.py
+│   alljoint.py
+|
+└───utils
 │   
 └───CUB_200_2011
     │   images.txt
