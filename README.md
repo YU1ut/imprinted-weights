@@ -123,3 +123,5 @@ Trained models will be saved at `alljoint_checkpoint`.
 |**Imprinting + FT** |**53.02** |**57.82** |**67.21** |**71.73** |**76.25** |
 |**AllClassJoint** |**42.73** |**48.43** |**62.20** |**69.95** |**75.89** |
 
+## References
+- [1]: H. Qi, M. Brown and D. Lowe. "Low-Shot Learning with Imprinted Weights", in CVPR, 2018.
