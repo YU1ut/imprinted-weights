@@ -74,6 +74,7 @@ Train model for base and novel classes jointly without a separate low-shot learn
 ```
 python alljoint.py --num-sample N
 ```
+Trained models will be saved at `alljoint_checkpoint`.
 
 ## Results
 ### 200-way top-1 accuracy for novel-class examples in CUB-200-2011
