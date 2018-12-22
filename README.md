@@ -3,12 +3,12 @@ This is an unofficial pytorch implementation of [Low-Shot Learning with Imprinte
 
 ## Requirements
 - Python 3.5+
-- PyTorch 0.4
+- PyTorch 0.4.1
 - torchvision
+- pandas (0.23.4)
 - progress
 - matplotlib
 - numpy
-- pandas
 
 ## Major Difference
 Paper: InceptionV1 + RMSProp
