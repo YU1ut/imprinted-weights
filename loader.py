@@ -62,7 +62,7 @@ class ImageLoader(torch.utils.data.Dataset):
         Returns:
             tuple: (image, target) where target is class_index of the target class.
         """
-        item = self.imgs.iloc[index]
+        item = self.imgs.iloc[int(index)]
         file_path = item['path']
         target = item['label']
 
